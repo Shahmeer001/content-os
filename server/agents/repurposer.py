@@ -55,30 +55,32 @@ twitter_chain   = twitter_prompt   | llm.with_config({"tags": ["twitter"]})   | 
 email_chain     = email_prompt     | llm.with_config({"tags": ["email"]})     | parser
 instagram_chain = instagram_prompt | llm.with_config({"tags": ["instagram"]}) | parser
 
-async def repurposer_node(state: ContentState) -> ContentState:
+from langchain_core.runnables import RunnableConfig
+
+async def repurposer_node(state: ContentState, config: RunnableConfig) -> ContentState:
     # Generate sequentially to reduce Groq load
     linked_in = await linkedin_chain.ainvoke({
         "blog": state["edited_blog"],
         "brand_voice": state.get("brand_voice", "professional")
-    })
+    }, config)
     
     await asyncio.sleep(1) # Small delay for Groq rate limits
     twitter = await twitter_chain.ainvoke({
         "blog": state["edited_blog"],
         "brand_voice": state.get("brand_voice", "professional")
-    })
+    }, config)
     
     await asyncio.sleep(1)
     email = await email_chain.ainvoke({
         "blog": state["edited_blog"],
         "brand_voice": state.get("brand_voice", "professional")
-    })
+    }, config)
     
     await asyncio.sleep(1)
     instagram = await instagram_chain.ainvoke({
         "blog": state["edited_blog"],
         "brand_voice": state.get("brand_voice", "professional")
-    })
+    }, config)
 
     return {
         **state,

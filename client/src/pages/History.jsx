@@ -15,15 +15,18 @@ export default function History() {
         supabase.auth.getUser().then(async ({ data }) => {
             setUser(data.user)
             if (data.user) {
-                const res = await fetch(`${API}/history/${data.user.id}`)
-                const json = await res.json()
-                setHistory(json.history || [])
+                const { data: historyData } = await supabase.from('content_history')
+                    .select('*')
+                    .eq('user_id', data.user.id)
+                    .order('created_at', { ascending: false })
+
+                setHistory(historyData || [])
             }
         })
     }, [])
 
     const remove = async (id) => {
-        await fetch(`${API}/history/${id}`, { method: 'DELETE' })
+        await supabase.from('content_history').delete().eq('id', id)
         setHistory(h => h.filter(item => item.id !== id))
     }
 

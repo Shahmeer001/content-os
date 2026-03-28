@@ -35,10 +35,12 @@ Write the full article now:""")
 
 writer_chain = writer_prompt | llm.with_config({"tags": ["blog"]}) | StrOutputParser()
 
-async def writer_node(state: ContentState) -> ContentState:
+from langchain_core.runnables import RunnableConfig
+
+async def writer_node(state: ContentState, config: RunnableConfig) -> ContentState:
     draft = await writer_chain.ainvoke({
         "keyword":    state["keyword"],
         "research":   state["research"],
         "brand_voice": state.get("brand_voice", "professional")
-    })
+    }, config)
     return {**state, "draft": draft}
