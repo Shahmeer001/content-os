@@ -8,17 +8,19 @@ from config import GROQ_API_KEY, SERPER_API_KEY
 from state import ContentState
 
 llm = ChatGroq(
-    model="llama3-70b-8192",
+    model="llama-3.3-70b-versatile",
     temperature=0.3,
     groq_api_key=GROQ_API_KEY
 )
 
+from langchain_core.tools import tool
+
 search = GoogleSerperAPIWrapper(serper_api_key=SERPER_API_KEY)
-search_tool = Tool(
-    name="web_search",
-    func=search.run,
-    description="Search the web for current information, articles, and data about any topic."
-)
+
+@tool
+def search_tool(query: str) -> str:
+    """Search the web for current information, articles, and data about any topic."""
+    return search.run(query)
 tools = [search_tool]
 
 researcher_prompt = """You are an expert content researcher. Your job is to research a topic deeply and return structured findings.

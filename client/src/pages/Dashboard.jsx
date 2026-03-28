@@ -42,16 +42,32 @@ export default function Dashboard() {
                     try {
                         const json = JSON.parse(line.replace('data: ', ''))
                         if (json.type === 'token') {
-                            setOutputs(prev => ({ ...prev, blog: prev.blog + json.token }))
+                            const target = json.target || 'blog'
+                            setOutputs(prev => ({ ...prev, [target]: prev[target] + json.token }))
+                            // Auto-switch tab if it's social content starting
+                            if (target !== 'blog') setActiveTab(target)
                         }
-                        if (json.type === 'done' && json.data) {
-                            setOutputs({
-                                blog: json.data.edited_blog || '',
-                                linkedin: json.data.linkedin_post || '',
-                                twitter: json.data.twitter_thread || '',
-                                email: json.data.email_newsletter || '',
-                                instagram: json.data.instagram_caption || ''
+                        if (json.type === 'done') {
+                            setOutputs(prev => {
+                                // Save to database from frontend using authenticated session and the exact output streamed
+                                if (user?.id) {
+                                    supabase.from('content_history').insert({
+                                        user_id: user.id,
+                                        keyword: keyword,
+                                        blog: prev.blog || '',
+                                        linkedin: prev.linkedin || '',
+                                        twitter: prev.twitter || '',
+                                        email: prev.email || '',
+                                        instagram: prev.instagram || '',
+                                        seo_score: json.data?.seo_score || 0
+                                    }).then(() => console.log('Successfully saved generated content.'))
+                                }
+                                return prev // Return prev unmodified to keep the exact text on the screen
                             })
+                        }
+                        if (json.type === 'error') {
+                            alert('Backend Error: ' + json.message)
+                            console.error('Backend Error:', json.message)
                         }
                     } catch { }
                 }
@@ -98,7 +114,7 @@ export default function Dashboard() {
                         <option value="gen-z">Gen-Z</option>
                     </select>
                     <button style={styles.btn} onClick={generate} disabled={loading}>
-                        {loading ? 'Generating...' : 'Generate'}
+                        {loading ? `Generating ${activeTab}...` : 'Generate'}
                     </button>
                 </div>
 
@@ -120,7 +136,7 @@ export default function Dashboard() {
                     </div>
                     <textarea style={styles.output} readOnly
                         value={outputs[activeTab]}
-                        placeholder={loading && activeTab === 'blog' ? 'Writing...' : `Your ${activeTab} content will appear here`} />
+                        placeholder={loading ? `Generating ${activeTab}...` : `Your ${activeTab} content will appear here`} />
                 </div>
             </div>
         </div>

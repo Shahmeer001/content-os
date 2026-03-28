@@ -1,14 +1,13 @@
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableParallel
-import sys, os
+import sys, os, asyncio
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from config import GROQ_API_KEY
 from state import ContentState
 
 llm = ChatGroq(
-    model="llama3-70b-8192",
+    model="llama-3.3-70b-versatile",
     temperature=0.7,
     groq_api_key=GROQ_API_KEY
 )
@@ -51,22 +50,40 @@ CTA in last line, 10-15 relevant hashtags at the end.""")
 
 parser = StrOutputParser()
 
-repurposer_chain = RunnableParallel(
-    linkedin  = linkedin_prompt  | llm | parser,
-    twitter   = twitter_prompt   | llm | parser,
-    email     = email_prompt     | llm | parser,
-    instagram = instagram_prompt | llm | parser,
-)
+linkedin_chain  = linkedin_prompt  | llm.with_config({"tags": ["linkedin"]})  | parser
+twitter_chain   = twitter_prompt   | llm.with_config({"tags": ["twitter"]})   | parser
+email_chain     = email_prompt     | llm.with_config({"tags": ["email"]})     | parser
+instagram_chain = instagram_prompt | llm.with_config({"tags": ["instagram"]}) | parser
 
 async def repurposer_node(state: ContentState) -> ContentState:
-    result = await repurposer_chain.ainvoke({
-        "blog":        state["edited_blog"],
+    # Generate sequentially to reduce Groq load
+    linked_in = await linkedin_chain.ainvoke({
+        "blog": state["edited_blog"],
         "brand_voice": state.get("brand_voice", "professional")
     })
+    
+    await asyncio.sleep(1) # Small delay for Groq rate limits
+    twitter = await twitter_chain.ainvoke({
+        "blog": state["edited_blog"],
+        "brand_voice": state.get("brand_voice", "professional")
+    })
+    
+    await asyncio.sleep(1)
+    email = await email_chain.ainvoke({
+        "blog": state["edited_blog"],
+        "brand_voice": state.get("brand_voice", "professional")
+    })
+    
+    await asyncio.sleep(1)
+    instagram = await instagram_chain.ainvoke({
+        "blog": state["edited_blog"],
+        "brand_voice": state.get("brand_voice", "professional")
+    })
+
     return {
         **state,
-        "linkedin_post":    result["linkedin"],
-        "twitter_thread":   result["twitter"],
-        "email_newsletter": result["email"],
-        "instagram_caption":result["instagram"]
+        "linkedin_post":    linked_in,
+        "twitter_thread":   twitter,
+        "email_newsletter": email,
+        "instagram_caption":instagram
     }

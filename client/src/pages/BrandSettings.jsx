@@ -38,6 +38,16 @@ export default function BrandSettings() {
         })
         const json = await res.json()
         setExtracted(json.extracted_voice)
+
+        // Save to database from frontend using authenticated session
+        if (user?.id) {
+            const { data } = await supabase.from('brand_profiles').select('id').eq('user_id', user.id)
+            if (data && data.length > 0) {
+                await supabase.from('brand_profiles').update({ tone, sample_text: sample, extracted_voice: json.extracted_voice }).eq('user_id', user.id)
+            } else {
+                await supabase.from('brand_profiles').insert({ user_id: user.id, tone, sample_text: sample, extracted_voice: json.extracted_voice })
+            }
+        }
         setSaved(true)
         setLoading(false)
         setTimeout(() => setSaved(false), 3000)

@@ -7,7 +7,7 @@ from config import GROQ_API_KEY
 from state import ContentState
 
 llm = ChatGroq(
-    model="llama3-70b-8192",
+    model="llama-3.3-70b-versatile",
     temperature=0.3,
     groq_api_key=GROQ_API_KEY
 )
@@ -18,9 +18,14 @@ class EditedArticle(BaseModel):
     seo_score:        int   = Field(description="SEO quality score from 0 to 100")
     suggested_title:  str   = Field(description="An optimised SEO title including the keyword")
 
+from langchain_core.output_parsers import JsonOutputParser
+
+parser = JsonOutputParser(pydantic_object=EditedArticle)
+
 editor_prompt = ChatPromptTemplate.from_messages([
     ("system", """You are a senior SEO editor and content strategist.
-Your job is to polish articles for maximum SEO impact and readability."""),
+Your job is to polish articles for maximum SEO impact and readability.
+{format_instructions}"""),
     ("human", """Edit and improve this blog post about: {keyword}
 
 Original draft:
@@ -37,21 +42,21 @@ Your editing checklist:
 - Write a meta description under 160 characters
 - Suggest an optimised title
 
-Return the fully edited article with all required fields.""")
+Return the fully edited article strictly following the JSON format instructions.""")
 ])
 
-structured_llm = llm.with_structured_output(EditedArticle)
-editor_chain   = editor_prompt | structured_llm
+editor_chain = editor_prompt | llm | parser
 
 async def editor_node(state: ContentState) -> ContentState:
     result = await editor_chain.ainvoke({
         "keyword": state["keyword"],
-        "draft":   state["draft"]
+        "draft":   state["draft"],
+        "format_instructions": parser.get_format_instructions()
     })
     return {
         **state,
-        "edited_blog":      result.edited_blog,
-        "meta_description": result.meta_description,
-        "seo_score":        result.seo_score,
-        "suggested_title":  result.suggested_title
+        "edited_blog":      result["edited_blog"],
+        "meta_description": result["meta_description"],
+        "seo_score":        result["seo_score"],
+        "suggested_title":  result["suggested_title"]
     }
