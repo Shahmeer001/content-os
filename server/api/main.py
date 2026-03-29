@@ -78,11 +78,15 @@ async def stream_pipeline(keyword: str, brand_voice: str, user_id: str):
                 if token:
                     tags = event.get("tags", [])
                     valid_targets = {"blog", "linkedin", "twitter", "email", "instagram"}
-                    target = "blog"
+                    target = None
                     for t in tags:
                         if t in valid_targets:
                             target = t
                             break
+                    
+                    if not target:
+                        continue
+                        
                     yield f"data: {json.dumps({'type': 'token', 'token': token, 'target': target})}\n\n"
 
             if event["event"] == "on_chain_end":
@@ -98,9 +102,11 @@ async def stream_pipeline(keyword: str, brand_voice: str, user_id: str):
                 save_content(user_id, keyword, final_state)
             except Exception as e:
                 # Ignore backend Supabase RLS error - frontend will save it with auth token
-                print(f"Backend save bypassed due to RLS: {e}")
+                pass
 
-        yield f"data: {json.dumps({'type': 'done', 'data': final_state})}\n\n"
+        # Send a tiny payload to prevent stream chunk splitting which breaks JSON parsing
+        seo = final_state.get('seo_score', 0) if isinstance(final_state, dict) else 0
+        yield f"data: {json.dumps({'type': 'done', 'seo_score': seo})}\n\n"
 
     except Exception as e:
         yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"

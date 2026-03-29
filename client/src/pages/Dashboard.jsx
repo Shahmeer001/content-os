@@ -9,18 +9,31 @@ export default function Dashboard() {
     const [voice, setVoice] = useState('professional')
     const [activeTab, setActiveTab] = useState('blog')
     const [outputs, setOutputs] = useState({ blog: '', linkedin: '', twitter: '', email: '', instagram: '' })
+    const [debugLog, setDebugLog] = useState([])
     const [loading, setLoading] = useState(false)
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
 
+    const addLog = (msg) => setDebugLog(l => [...l, msg])
+
+    // Load state from sessionStorage on mount
     useEffect(() => {
+        const savedOutputs = sessionStorage.getItem('dashboard_outputs')
+        const savedKeyword = sessionStorage.getItem('dashboard_keyword')
+        if (savedOutputs) setOutputs(JSON.parse(savedOutputs))
+        if (savedKeyword) setKeyword(savedKeyword)
+
         supabase.auth.getUser().then(({ data }) => setUser(data.user))
     }, [])
 
     const generate = async () => {
         if (!keyword.trim()) return
+
+        sessionStorage.setItem('dashboard_keyword', keyword)
+
         setLoading(true)
-        setOutputs({ blog: '', linkedin: '', twitter: '', email: '', instagram: '' })
+        let currentOutputs = { blog: '', linkedin: '', twitter: '', email: '', instagram: '' }
+        setOutputs(currentOutputs)
         setActiveTab('blog')
 
         try {
@@ -32,48 +45,71 @@ export default function Dashboard() {
 
             const reader = res.body.getReader()
             const decoder = new TextDecoder()
+            let buffer = ''
 
             while (true) {
                 const { done, value } = await reader.read()
                 if (done) break
-                const text = decoder.decode(value)
-                const lines = text.split('\n').filter(l => l.startsWith('data:'))
+
+                buffer += decoder.decode(value, { stream: true })
+                const lines = buffer.split('\n')
+                buffer = lines.pop() || '' // Keep the incomplete line for the next chunk
+
                 for (const line of lines) {
+                    if (!line.startsWith('data:')) continue
+
                     try {
-                        const json = JSON.parse(line.replace('data: ', ''))
+                        const json = JSON.parse(line.replace('data:', '').trim())
+
                         if (json.type === 'token') {
                             const target = json.target || 'blog'
-                            setOutputs(prev => ({ ...prev, [target]: prev[target] + json.token }))
+                            currentOutputs[target] += json.token
+                            setOutputs({ ...currentOutputs })
+                            sessionStorage.setItem('dashboard_outputs', JSON.stringify(currentOutputs))
+
                             // Auto-switch tab if it's social content starting
                             if (target !== 'blog') setActiveTab(target)
                         }
                         if (json.type === 'done') {
-                            setOutputs(prev => {
-                                // Save to database from frontend using authenticated session and the exact output streamed
-                                if (user?.id) {
-                                    supabase.from('content_history').insert({
-                                        user_id: user.id,
-                                        keyword: keyword,
-                                        blog: prev.blog || '',
-                                        linkedin: prev.linkedin || '',
-                                        twitter: prev.twitter || '',
-                                        email: prev.email || '',
-                                        instagram: prev.instagram || '',
-                                        seo_score: json.data?.seo_score || 0
-                                    }).then(() => console.log('Successfully saved generated content.'))
+                            addLog('Received DONE signal from backend.')
+                            // Save to database natively outside of React state cycle
+                            if (user?.id) {
+                                addLog('Attempting Supabase insert for user: ' + user.id)
+                                const { data: insertedData, error: dbError } = await supabase.from('content_history').insert({
+                                    user_id: user.id,
+                                    keyword: keyword,
+                                    blog: currentOutputs.blog || '',
+                                    linkedin: currentOutputs.linkedin || '',
+                                    twitter: currentOutputs.twitter || '',
+                                    email: currentOutputs.email || '',
+                                    instagram: currentOutputs.instagram || '',
+                                    seo_score: json.seo_score || 0
+                                }).select()
+
+                                if (dbError) {
+                                    alert("Database Insert Error: " + dbError.message)
+                                    addLog('DB Error: ' + dbError.message)
+                                } else if (!insertedData || insertedData.length === 0) {
+                                    addLog('FATAL: Supabase returned NO error, but the row was NOT inserted (returned empty). RLS might still be active!')
+                                } else {
+                                    addLog(`Successfully confirmed insertion! New Row ID: ${insertedData[0].id}`)
                                 }
-                                return prev // Return prev unmodified to keep the exact text on the screen
-                            })
+                            } else {
+                                addLog('User not logged in, skipping insert.')
+                            }
                         }
                         if (json.type === 'error') {
                             alert('Backend Error: ' + json.message)
-                            console.error('Backend Error:', json.message)
+                            addLog('Backend Error: ' + json.message)
                         }
-                    } catch { }
+                    } catch (err) {
+                        // Silently ignore incomplete JSON if any sneak through
+                    }
                 }
             }
+            addLog('Stream loop completed naturally.')
         } catch (e) {
-            console.error(e)
+            addLog('Exception thrown: ' + e.message)
         } finally {
             setLoading(false)
         }
@@ -117,6 +153,13 @@ export default function Dashboard() {
                         {loading ? `Generating ${activeTab}...` : 'Generate'}
                     </button>
                 </div>
+
+                {debugLog.length > 0 && (
+                    <div style={{ background: '#333', color: '#0f0', padding: 10, marginBottom: 20, fontFamily: 'monospace', fontSize: 11, borderRadius: 6 }}>
+                        <strong>Debug Logs:</strong>
+                        {debugLog.map((log, i) => <div key={i}>{log}</div>)}
+                    </div>
+                )}
 
                 <div style={styles.tabs}>
                     {tabs.map(tab => (

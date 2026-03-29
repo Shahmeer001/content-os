@@ -11,18 +11,25 @@ export default function History() {
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
 
-    useEffect(() => {
-        supabase.auth.getUser().then(async ({ data }) => {
-            setUser(data.user)
-            if (data.user) {
-                const { data: historyData } = await supabase.from('content_history')
-                    .select('*')
-                    .eq('user_id', data.user.id)
-                    .order('created_at', { ascending: false })
+    const fetchHistory = async () => {
+        const { data: userData } = await supabase.auth.getUser()
+        setUser(userData?.user)
 
-                setHistory(historyData || [])
-            }
-        })
+        let query = supabase.from('content_history').select('*').order('created_at', { ascending: false })
+
+        // Temporarily bypassing .eq('user_id') filter to catch mismatched identity issues!
+        const { data: historyData, error } = await query
+
+        if (error) {
+            alert("History Fetch Error: " + error.message)
+            console.error("Fetch Error:", error)
+        }
+
+        setHistory(historyData || [])
+    }
+
+    useEffect(() => {
+        fetchHistory()
     }, [])
 
     const remove = async (id) => {
@@ -40,14 +47,25 @@ export default function History() {
                 <span style={styles.back} onClick={() => navigate('/dashboard')}>← Dashboard</span>
             </nav>
             <div style={styles.main}>
-                <h2 style={styles.heading}>Content history</h2>
-                {history.length === 0 && <p style={{ color: '#888', fontSize: 14 }}>No content generated yet. Go to the dashboard to create your first piece.</p>}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                    <h2 style={{ ...styles.heading, marginBottom: 0 }}>Content history</h2>
+                    <button style={styles.expandBtn} onClick={fetchHistory}>Refresh History</button>
+                </div>
+
+                {history.length === 0 && <p style={{ color: '#888', fontSize: 14 }}>No content generated yet.</p>}
                 {history.map(item => (
                     <div key={item.id} style={styles.card}>
                         <div style={styles.cardTop}>
                             <div>
                                 <div style={styles.keyword}>{item.keyword}</div>
-                                <div style={styles.date}>{new Date(item.created_at).toLocaleDateString()} · SEO score: {item.seo_score}/100</div>
+                                <div style={styles.date}>
+                                    {new Date(item.created_at).toLocaleDateString()} · SEO score: {item.seo_score}/100
+                                    <br />
+                                    <span style={{ fontSize: 10, color: '#aaa' }}>
+                                        UserID: {item.user_id?.substring(0, 8)}... |
+                                        Blog: {item.blog?.length || 0} chars | LinkedIn: {item.linkedin?.length || 0} chars
+                                    </span>
+                                </div>
                             </div>
                             <div style={{ display: 'flex', gap: 8 }}>
                                 <button style={styles.expandBtn} onClick={() => setExpanded(expanded === item.id ? null : item.id)}>

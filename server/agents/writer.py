@@ -7,7 +7,7 @@ from config import GROQ_API_KEY
 from state import ContentState
 
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
+    model="llama-3.1-8b-instant",
     temperature=0.7,
     groq_api_key=GROQ_API_KEY
 )
