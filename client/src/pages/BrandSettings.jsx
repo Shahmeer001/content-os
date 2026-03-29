@@ -56,8 +56,8 @@ export default function BrandSettings() {
     return (
         <div style={styles.wrap}>
             <nav style={styles.nav}>
-                <span style={styles.navLogo} onClick={() => navigate('/dashboard')}>ContentOS</span>
                 <span style={styles.back} onClick={() => navigate('/dashboard')}>← Dashboard</span>
+                <span style={styles.navLogo} onClick={() => navigate('/dashboard')}>ContentOS</span>
             </nav>
             <div style={styles.main}>
                 <h2 style={styles.heading}>Brand voice settings</h2>
@@ -66,12 +66,12 @@ export default function BrandSettings() {
                 <div style={styles.card}>
                     <label style={styles.label}>Tone</label>
                     <select style={styles.select} value={tone} onChange={e => setTone(e.target.value)}>
-                        <option value="professional">Professional</option>
-                        <option value="casual">Casual</option>
-                        <option value="bold">Bold & Direct</option>
-                        <option value="friendly">Friendly & Warm</option>
-                        <option value="gen-z">Gen-Z</option>
-                        <option value="luxury">Luxury & Premium</option>
+                        <option style={styles.option} value="professional">Professional</option>
+                        <option style={styles.option} value="casual">Casual</option>
+                        <option style={styles.option} value="bold">Bold & Direct</option>
+                        <option style={styles.option} value="friendly">Friendly & Warm</option>
+                        <option style={styles.option} value="gen-z">Gen-Z</option>
+                        <option style={styles.option} value="luxury">Luxury & Premium</option>
                     </select>
 
                     <label style={styles.label}>Writing sample <span style={{ color: '#aaa', fontWeight: 400 }}>(paste 100+ words of your best writing)</span></label>
@@ -99,6 +99,7 @@ const styles = {
     wrap: {
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+        backgroundAttachment: 'fixed',
         fontFamily: "'Inter', system-ui, sans-serif",
         color: '#fff'
     },
@@ -120,7 +121,18 @@ const styles = {
         letterSpacing: '-0.5px',
         cursor: 'pointer'
     },
-    back: { fontSize: 14, color: '#e0e0e0', cursor: 'pointer', fontWeight: 600 },
+    back: {
+        fontSize: 14,
+        color: '#e0e0e0',
+        cursor: 'pointer',
+        fontWeight: 600,
+        transition: 'all 0.2s',
+        background: 'rgba(255, 255, 255, 0.05)',
+        padding: '8px 20px',
+        borderRadius: '30px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        ... { '&:hover': { color: '#fff', background: 'rgba(255, 255, 255, 0.1)' } }
+    },
     main: { maxWidth: 960, margin: '0 auto', padding: '40px 24px', animation: 'fadeIn 0.5s ease' },
     heading: { fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.5px' },
     sub: { fontSize: 15, color: '#aaa', marginBottom: 30 },
@@ -144,6 +156,10 @@ const styles = {
         background: 'rgba(0,0,0,0.3)',
         color: '#fff',
         cursor: 'pointer'
+    },
+    option: {
+        background: '#24243e',
+        color: '#fff'
     },
     textarea: {
         width: '100%',

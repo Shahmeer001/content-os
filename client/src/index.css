@@ -3,12 +3,15 @@
   color-scheme: light dark;
 }
 
+html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100vh;
-  background-color: #0f0c29; /* Fallback for the react gradient */
+  background-color: #0f0c29;
+  /* Fallback for the react gradient */
+  overscroll-behavior: none;
 }
 
 #root {

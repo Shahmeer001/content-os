@@ -127,12 +127,12 @@ export default function Dashboard() {
     return (
         <div style={styles.wrap}>
             <nav style={styles.nav}>
-                <span style={styles.navLogo}>ContentOS</span>
                 <div style={styles.navLinks}>
                     <span style={styles.navLink} onClick={() => navigate('/brand')}>Brand</span>
                     <span style={styles.navLink} onClick={() => navigate('/history')}>History</span>
                     <span style={{ ...styles.navLink, color: '#cc0000' }} onClick={logout}>Logout</span>
                 </div>
+                <span style={styles.navLogo}>ContentOS</span>
             </nav>
 
             <div style={styles.main}>
@@ -143,11 +143,11 @@ export default function Dashboard() {
                         value={keyword} onChange={e => setKeyword(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && generate()} />
                     <select style={styles.select} value={voice} onChange={e => setVoice(e.target.value)}>
-                        <option value="professional">Professional</option>
-                        <option value="casual">Casual</option>
-                        <option value="bold">Bold</option>
-                        <option value="friendly">Friendly</option>
-                        <option value="gen-z">Gen-Z</option>
+                        <option style={styles.option} value="professional">Professional</option>
+                        <option style={styles.option} value="casual">Casual</option>
+                        <option style={styles.option} value="bold">Bold</option>
+                        <option style={styles.option} value="friendly">Friendly</option>
+                        <option style={styles.option} value="gen-z">Gen-Z</option>
                     </select>
                     <button style={styles.btn} onClick={generate} disabled={loading}>
                         {loading ? `Generating ${activeTab}...` : 'Generate'}
@@ -190,6 +190,7 @@ const styles = {
     wrap: {
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+        backgroundAttachment: 'fixed',
         fontFamily: "'Inter', system-ui, sans-serif",
         color: '#fff'
     },
@@ -210,7 +211,15 @@ const styles = {
         WebkitTextFillColor: 'transparent',
         letterSpacing: '-0.5px'
     },
-    navLinks: { display: 'flex', gap: 32, alignItems: 'center' },
+    navLinks: {
+        display: 'flex',
+        gap: 32,
+        alignItems: 'center',
+        background: 'rgba(255, 255, 255, 0.05)',
+        padding: '10px 24px',
+        borderRadius: '30px',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+    },
     navLink: { fontSize: 14, color: '#e0e0e0', cursor: 'pointer', fontWeight: 600, transition: 'color 0.2s', ... { '&:hover': { color: '#fff' } } },
     main: { maxWidth: 960, margin: '0 auto', padding: '40px 24px', animation: 'fadeIn 0.5s ease' },
     heading: { fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 30, letterSpacing: '-0.5px' },
@@ -243,6 +252,10 @@ const styles = {
         background: 'rgba(0,0,0,0.3)',
         color: '#fff',
         cursor: 'pointer'
+    },
+    option: {
+        background: '#24243e',
+        color: '#fff'
     },
     btn: {
         padding: '14px 36px',
