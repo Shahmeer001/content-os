@@ -98,22 +98,110 @@ export default function History() {
 }
 
 const styles = {
-    wrap: { minHeight: '100vh', background: '#f9f9f9', fontFamily: 'sans-serif' },
-    nav: { background: '#fff', borderBottom: '1px solid #eee', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-    navLogo: { fontWeight: 800, fontSize: 18, color: '#7F77DD', cursor: 'pointer' },
-    back: { fontSize: 13, color: '#888', cursor: 'pointer' },
-    main: { maxWidth: 900, margin: '0 auto', padding: '32px 24px' },
-    heading: { fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 20 },
-    card: { background: '#fff', borderRadius: 12, border: '1.5px solid #e0e0e0', padding: 20, marginBottom: 12 },
-    cardTop: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-    keyword: { fontSize: 15, fontWeight: 700, color: '#111' },
-    date: { fontSize: 12, color: '#888', marginTop: 4 },
-    expandBtn: { padding: '6px 14px', borderRadius: 8, border: '1.5px solid #7F77DD', color: '#7F77DD', background: 'transparent', fontSize: 12, fontWeight: 600, cursor: 'pointer' },
-    deleteBtn: { padding: '6px 14px', borderRadius: 8, border: '1.5px solid #ffcccc', color: '#cc0000', background: 'transparent', fontSize: 12, fontWeight: 600, cursor: 'pointer' },
-    detail: { marginTop: 16, borderTop: '1px solid #eee', paddingTop: 16 },
-    tabs: { display: 'flex', gap: 6, marginBottom: 12 },
-    tab: { padding: '5px 14px', borderRadius: 20, border: '1.5px solid #e0e0e0', background: '#fff', fontSize: 11, fontWeight: 600, cursor: 'pointer', color: '#888' },
-    tabActive: { background: '#7F77DD', color: '#fff', borderColor: '#7F77DD' },
-    output: { width: '100%', padding: '12px 14px', borderRadius: 8, border: '1.5px solid #e0e0e0', fontSize: 12, lineHeight: 1.7, color: '#333', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box', outline: 'none' },
-    copyBtn: { marginTop: 8, padding: '6px 16px', borderRadius: 8, border: '1.5px solid #7F77DD', color: '#7F77DD', background: 'transparent', fontSize: 12, fontWeight: 600, cursor: 'pointer' }
+    wrap: {
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+        fontFamily: "'Inter', system-ui, sans-serif",
+        color: '#fff'
+    },
+    nav: {
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '16px 40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    navLogo: {
+        fontWeight: 900,
+        fontSize: 22,
+        background: 'linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        letterSpacing: '-0.5px',
+        cursor: 'pointer'
+    },
+    back: { fontSize: 14, color: '#e0e0e0', cursor: 'pointer', fontWeight: 600, transition: 'color 0.2s', ... { '&:hover': { color: '#fff' } } },
+    main: { maxWidth: 960, margin: '0 auto', padding: '40px 24px', animation: 'fadeIn 0.5s ease' },
+    heading: { fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 30, letterSpacing: '-0.5px' },
+    card: {
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: 16,
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: 24,
+        marginBottom: 20,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+    },
+    cardTop: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' },
+    keyword: { fontSize: 18, fontWeight: 800, color: '#fff' },
+    date: { fontSize: 13, color: '#aaa', marginTop: 6, lineHeight: 1.5 },
+    expandBtn: {
+        padding: '8px 20px',
+        borderRadius: 10,
+        border: '1.5px solid rgba(0, 201, 255, 0.5)',
+        color: '#00C9FF',
+        background: 'rgba(0, 201, 255, 0.1)',
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: 'pointer',
+        transition: 'all 0.2s'
+    },
+    deleteBtn: {
+        padding: '8px 20px',
+        borderRadius: 10,
+        border: '1.5px solid rgba(255, 100, 100, 0.5)',
+        color: '#ff6b6b',
+        background: 'rgba(255, 100, 100, 0.1)',
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: 'pointer',
+        transition: 'all 0.2s'
+    },
+    detail: { marginTop: 24, borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: 24 },
+    tabs: { display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' },
+    tab: {
+        padding: '8px 24px',
+        borderRadius: 30,
+        border: '1px solid rgba(255,255,255,0.1)',
+        background: 'rgba(255,255,255,0.05)',
+        fontSize: 13,
+        fontWeight: 600,
+        cursor: 'pointer',
+        color: '#aaa',
+        transition: 'all 0.3s ease'
+    },
+    tabActive: {
+        background: 'linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%)',
+        color: '#111',
+        borderColor: 'transparent',
+        boxShadow: '0 4px 12px rgba(0, 201, 255, 0.3)'
+    },
+    output: {
+        width: '100%',
+        padding: '20px',
+        borderRadius: 12,
+        border: '1px solid rgba(255,255,255,0.1)',
+        fontSize: 14,
+        lineHeight: 1.8,
+        color: '#f0f0f0',
+        background: 'rgba(0,0,0,0.3)',
+        resize: 'vertical',
+        fontFamily: "'Inter', sans-serif",
+        boxSizing: 'border-box',
+        outline: 'none'
+    },
+    copyBtn: {
+        marginTop: 16,
+        padding: '10px 24px',
+        borderRadius: 10,
+        border: 'none',
+        color: '#111',
+        background: '#92FE9D',
+        fontSize: 13,
+        fontWeight: 800,
+        cursor: 'pointer',
+        boxShadow: '0 2px 10px rgba(146, 254, 157, 0.3)'
+    }
 }

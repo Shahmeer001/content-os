@@ -33,19 +33,71 @@ export default function Signup() {
                         {loading ? 'Creating account...' : 'Create account'}
                     </button>
                 </form>
-                <p style={styles.link}>Have an account? <Link to="/login">Sign in</Link></p>
+                <p style={styles.link}>Have an account? <Link to="/login" style={styles.linkAnchor}>Sign in</Link></p>
             </div>
         </div>
     )
 }
 
 const styles = {
-    wrap: { minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5' },
-    card: { background: '#fff', borderRadius: 12, padding: '40px 36px', width: '100%', maxWidth: 400, boxShadow: '0 2px 16px rgba(0,0,0,0.08)' },
-    logo: { fontSize: 24, fontWeight: 800, color: '#7F77DD', marginBottom: 4 },
-    sub: { color: '#888', fontSize: 14, marginBottom: 24 },
-    input: { display: 'block', width: '100%', padding: '10px 14px', borderRadius: 8, border: '1.5px solid #e0e0e0', marginBottom: 12, fontSize: 14, outline: 'none', boxSizing: 'border-box' },
-    btn: { width: '100%', padding: '12px', background: '#7F77DD', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer' },
-    error: { background: '#fff0f0', color: '#cc0000', borderRadius: 8, padding: '8px 12px', marginBottom: 12, fontSize: 13 },
-    link: { textAlign: 'center', marginTop: 16, fontSize: 13, color: '#888' }
+    wrap: {
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+        fontFamily: "'Inter', system-ui, sans-serif"
+    },
+    card: {
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: 20,
+        padding: '50px 40px',
+        width: '100%',
+        maxWidth: 400,
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+        textAlign: 'center'
+    },
+    logo: {
+        fontSize: 32,
+        fontWeight: 900,
+        background: 'linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        marginBottom: 8,
+        letterSpacing: '-1px'
+    },
+    sub: { color: '#aaa', fontSize: 15, marginBottom: 30, letterSpacing: '0.5px' },
+    input: {
+        display: 'block',
+        width: '100%',
+        padding: '16px 20px',
+        borderRadius: 10,
+        border: '1px solid rgba(255,255,255,0.15)',
+        marginBottom: 16,
+        fontSize: 15,
+        outline: 'none',
+        boxSizing: 'border-box',
+        background: 'rgba(0,0,0,0.3)',
+        color: '#fff',
+        transition: 'all 0.3s ease'
+    },
+    btn: {
+        width: '100%',
+        padding: '16px',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: '#fff',
+        border: 'none',
+        borderRadius: 10,
+        fontSize: 16,
+        fontWeight: 800,
+        cursor: 'pointer',
+        boxShadow: '0 4px 15px rgba(118, 75, 162, 0.4)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        marginTop: 10
+    },
+    error: { background: 'rgba(255, 100, 100, 0.1)', border: '1px solid rgba(255, 100, 100, 0.5)', color: '#ff6b6b', borderRadius: 8, padding: '12px', marginBottom: 20, fontSize: 14 },
+    link: { textAlign: 'center', marginTop: 24, fontSize: 14, color: '#aaa' },
+    linkAnchor: { color: '#00C9FF', textDecoration: 'none', fontWeight: 600 }
 }

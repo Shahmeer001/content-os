@@ -96,20 +96,90 @@ export default function BrandSettings() {
 }
 
 const styles = {
-    wrap: { minHeight: '100vh', background: '#f9f9f9', fontFamily: 'sans-serif' },
-    nav: { background: '#fff', borderBottom: '1px solid #eee', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-    navLogo: { fontWeight: 800, fontSize: 18, color: '#7F77DD', cursor: 'pointer' },
-    back: { fontSize: 13, color: '#888', cursor: 'pointer' },
-    main: { maxWidth: 700, margin: '0 auto', padding: '32px 24px' },
-    heading: { fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 },
-    sub: { fontSize: 14, color: '#888', marginBottom: 24 },
-    card: { background: '#fff', borderRadius: 12, border: '1.5px solid #e0e0e0', padding: 24, marginBottom: 20 },
-    label: { display: 'block', fontSize: 12, fontWeight: 700, color: '#555', marginBottom: 6, marginTop: 16 },
-    select: { width: '100%', padding: '10px 14px', borderRadius: 8, border: '1.5px solid #e0e0e0', fontSize: 14, outline: 'none', background: '#fff' },
-    textarea: { width: '100%', padding: '12px 14px', borderRadius: 8, border: '1.5px solid #e0e0e0', fontSize: 13, outline: 'none', resize: 'vertical', lineHeight: 1.6, fontFamily: 'sans-serif', boxSizing: 'border-box' },
-    btn: { marginTop: 16, padding: '12px 24px', background: '#7F77DD', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer' },
-    success: { marginTop: 10, color: '#1D9E75', fontSize: 13, fontWeight: 600 },
-    extractedCard: { background: '#EEEDFE', borderRadius: 12, padding: 20 },
-    extractedLabel: { fontSize: 11, fontWeight: 700, color: '#7F77DD', textTransform: 'uppercase', marginBottom: 8 },
-    extractedText: { fontSize: 13, color: '#3C3489', lineHeight: 1.7, whiteSpace: 'pre-wrap' }
+    wrap: {
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+        fontFamily: "'Inter', system-ui, sans-serif",
+        color: '#fff'
+    },
+    nav: {
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '16px 40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    navLogo: {
+        fontWeight: 900,
+        fontSize: 22,
+        background: 'linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        letterSpacing: '-0.5px',
+        cursor: 'pointer'
+    },
+    back: { fontSize: 14, color: '#e0e0e0', cursor: 'pointer', fontWeight: 600 },
+    main: { maxWidth: 960, margin: '0 auto', padding: '40px 24px', animation: 'fadeIn 0.5s ease' },
+    heading: { fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 12, letterSpacing: '-0.5px' },
+    sub: { fontSize: 15, color: '#aaa', marginBottom: 30 },
+    card: {
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: 16,
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: 32,
+        marginBottom: 20,
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+    },
+    label: { display: 'block', fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 10, marginTop: 24, textTransform: 'uppercase', letterSpacing: '1px' },
+    select: {
+        width: '100%',
+        padding: '14px 20px',
+        borderRadius: 10,
+        border: '1px solid rgba(255,255,255,0.15)',
+        fontSize: 14,
+        outline: 'none',
+        background: 'rgba(0,0,0,0.3)',
+        color: '#fff',
+        cursor: 'pointer'
+    },
+    textarea: {
+        width: '100%',
+        padding: '20px',
+        borderRadius: 12,
+        border: '1px solid rgba(255,255,255,0.15)',
+        fontSize: 15,
+        outline: 'none',
+        resize: 'vertical',
+        lineHeight: 1.8,
+        color: '#f0f0f0',
+        background: 'rgba(0,0,0,0.3)',
+        fontFamily: "'Inter', sans-serif",
+        boxSizing: 'border-box'
+    },
+    btn: {
+        marginTop: 24,
+        padding: '16px 36px',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: '#fff',
+        border: 'none',
+        borderRadius: 10,
+        fontSize: 15,
+        fontWeight: 800,
+        cursor: 'pointer',
+        boxShadow: '0 4px 15px rgba(118, 75, 162, 0.4)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        width: '100%'
+    },
+    success: { marginTop: 16, color: '#92FE9D', fontSize: 13, fontWeight: 700, textAlign: 'center' },
+    extractedCard: {
+        background: 'rgba(0, 201, 255, 0.05)',
+        borderRadius: 16,
+        padding: 24,
+        border: '1px solid rgba(0, 201, 255, 0.2)'
+    },
+    extractedLabel: { fontSize: 12, fontWeight: 800, color: '#00C9FF', textTransform: 'uppercase', marginBottom: 12, letterSpacing: '1px' },
+    extractedText: { fontSize: 15, color: '#e0e0e0', lineHeight: 1.8, whiteSpace: 'pre-wrap', fontFamily: "'Inter', sans-serif" }
 }

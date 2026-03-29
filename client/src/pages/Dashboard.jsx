@@ -187,23 +187,134 @@ export default function Dashboard() {
 }
 
 const styles = {
-    wrap: { minHeight: '100vh', background: '#f9f9f9', fontFamily: 'sans-serif' },
-    nav: { background: '#fff', borderBottom: '1px solid #eee', padding: '14px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-    navLogo: { fontWeight: 800, fontSize: 18, color: '#7F77DD' },
-    navLinks: { display: 'flex', gap: 24 },
-    navLink: { fontSize: 13, color: '#555', cursor: 'pointer', fontWeight: 500 },
-    main: { maxWidth: 900, margin: '0 auto', padding: '32px 24px' },
-    heading: { fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 20 },
-    inputRow: { display: 'flex', gap: 10, marginBottom: 20 },
-    input: { flex: 1, padding: '10px 14px', borderRadius: 8, border: '1.5px solid #e0e0e0', fontSize: 14, outline: 'none' },
-    select: { padding: '10px 14px', borderRadius: 8, border: '1.5px solid #e0e0e0', fontSize: 13, outline: 'none', background: '#fff' },
-    btn: { padding: '10px 24px', background: '#7F77DD', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' },
-    tabs: { display: 'flex', gap: 6, marginBottom: 16 },
-    tab: { padding: '6px 18px', borderRadius: 20, border: '1.5px solid #e0e0e0', background: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', color: '#888' },
-    tabActive: { background: '#7F77DD', color: '#fff', borderColor: '#7F77DD' },
-    outputWrap: { background: '#fff', borderRadius: 12, border: '1.5px solid #e0e0e0', overflow: 'hidden' },
-    outputHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', borderBottom: '1px solid #eee' },
-    outputLabel: { fontSize: 12, fontWeight: 700, color: '#888', textTransform: 'uppercase' },
-    copyBtn: { fontSize: 11, padding: '4px 12px', borderRadius: 20, border: '1.5px solid #7F77DD', color: '#7F77DD', background: 'transparent', cursor: 'pointer', fontWeight: 600 },
-    output: { width: '100%', minHeight: 400, padding: '16px', border: 'none', outline: 'none', fontSize: 13, lineHeight: 1.7, color: '#333', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'sans-serif' }
+    wrap: {
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
+        fontFamily: "'Inter', system-ui, sans-serif",
+        color: '#fff'
+    },
+    nav: {
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '16px 40px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    navLogo: {
+        fontWeight: 900,
+        fontSize: 22,
+        background: 'linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        letterSpacing: '-0.5px'
+    },
+    navLinks: { display: 'flex', gap: 32, alignItems: 'center' },
+    navLink: { fontSize: 14, color: '#e0e0e0', cursor: 'pointer', fontWeight: 600, transition: 'color 0.2s', ... { '&:hover': { color: '#fff' } } },
+    main: { maxWidth: 960, margin: '0 auto', padding: '40px 24px', animation: 'fadeIn 0.5s ease' },
+    heading: { fontSize: 32, fontWeight: 800, color: '#fff', marginBottom: 30, letterSpacing: '-0.5px' },
+    inputRow: {
+        display: 'flex',
+        gap: 16,
+        marginBottom: 30,
+        background: 'rgba(255,255,255,0.05)',
+        padding: 12,
+        borderRadius: 16,
+        border: '1px solid rgba(255,255,255,0.1)'
+    },
+    input: {
+        flex: 1,
+        padding: '14px 20px',
+        borderRadius: 10,
+        border: '1px solid rgba(255,255,255,0.15)',
+        fontSize: 15,
+        outline: 'none',
+        background: 'rgba(0,0,0,0.3)',
+        color: '#fff',
+        transition: 'all 0.3s ease'
+    },
+    select: {
+        padding: '14px 20px',
+        borderRadius: 10,
+        border: '1px solid rgba(255,255,255,0.15)',
+        fontSize: 14,
+        outline: 'none',
+        background: 'rgba(0,0,0,0.3)',
+        color: '#fff',
+        cursor: 'pointer'
+    },
+    btn: {
+        padding: '14px 36px',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: '#fff',
+        border: 'none',
+        borderRadius: 10,
+        fontSize: 15,
+        fontWeight: 800,
+        cursor: 'pointer',
+        whiteSpace: 'nowrap',
+        boxShadow: '0 4px 15px rgba(118, 75, 162, 0.4)',
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+    },
+    tabs: { display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' },
+    tab: {
+        padding: '8px 24px',
+        borderRadius: 30,
+        border: '1px solid rgba(255,255,255,0.1)',
+        background: 'rgba(255,255,255,0.05)',
+        fontSize: 13,
+        fontWeight: 600,
+        cursor: 'pointer',
+        color: '#aaa',
+        transition: 'all 0.3s ease'
+    },
+    tabActive: {
+        background: 'linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%)',
+        color: '#111',
+        borderColor: 'transparent',
+        boxShadow: '0 4px 12px rgba(0, 201, 255, 0.3)'
+    },
+    outputWrap: {
+        background: 'rgba(255, 255, 255, 0.03)',
+        backdropFilter: 'blur(16px)',
+        borderRadius: 16,
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        overflow: 'hidden',
+        boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+    },
+    outputHeader: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '14px 20px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        background: 'rgba(0,0,0,0.2)'
+    },
+    outputLabel: { fontSize: 13, fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: '1px' },
+    copyBtn: {
+        fontSize: 12,
+        padding: '6px 16px',
+        borderRadius: 20,
+        border: 'none',
+        color: '#111',
+        background: '#92FE9D',
+        cursor: 'pointer',
+        fontWeight: 700,
+        boxShadow: '0 2px 10px rgba(146, 254, 157, 0.3)'
+    },
+    output: {
+        width: '100%',
+        minHeight: 450,
+        padding: '24px',
+        border: 'none',
+        outline: 'none',
+        fontSize: 15,
+        lineHeight: 1.8,
+        color: '#f0f0f0',
+        background: 'transparent',
+        resize: 'vertical',
+        boxSizing: 'border-box',
+        fontFamily: "'Inter', sans-serif"
+    }
 }
